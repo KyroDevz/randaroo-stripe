@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const Stripe = require('stripe');
 require('dotenv').config();
 
@@ -7,6 +8,13 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
 app.use(express.json());
+
+app.use(cors({
+    origin: 'https://shop.rankaroo.solutions', // ✅ your frontend domain
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }));
+  
 
 app.post('/create-checkout-session', async (req, res) => {
   const { productId } = req.body;
