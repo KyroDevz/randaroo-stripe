@@ -10,9 +10,9 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://shop.rankaroo.solutions',
+  origin: 'https://shop.rankaroo.solutions', // ✅ Update to your frontend domain
   methods: ['GET', 'POST'],
-  credentials: true,
+  credentials: true
 }));
 
 app.post('/create-checkout-session', async (req, res) => {
@@ -24,28 +24,37 @@ app.post('/create-checkout-session', async (req, res) => {
   };
 
   const product = products[productId];
-  if (!product) return res.status(400).json({ error: "Invalid product" });
+  if (!product) {
+    return res.status(400).json({ error: "Invalid product" });
+  }
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    mode: 'payment',
-    metadata: {
-      robloxUsername: robloxUsername || 'unknown',
-      discordUserId: discordUserId || 'unknown'
-    },
-    line_items: [{
-      price_data: {
-        currency: 'usd',
-        product_data: { name: product.name },
-        unit_amount: product.price
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: product.name
+          },
+          unit_amount: product.price
+        },
+        quantity: 1
+      }],
+      metadata: {
+        robloxUsername: robloxUsername || 'Unknown',
+        discordUserId: discordUserId || 'Unknown'
       },
-      quantity: 1
-    }],
-    success_url: `${req.headers.origin}/success.html`,
-    cancel_url: `${req.headers.origin}/cancel.html`
-  });
+      success_url: `${req.headers.origin}/success.html`,
+      cancel_url: `${req.headers.origin}/cancel.html`
+    });
 
-  res.json({ url: session.url });
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Error creating Stripe session:', error);
+    res.status(500).json({ error: 'An error occurred while creating checkout session' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
