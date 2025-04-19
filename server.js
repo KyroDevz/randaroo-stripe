@@ -29,7 +29,7 @@ app.post('/create-checkout-session', async (req, res) => {
   // Free product: no Stripe needed
   if (product.price === 0) {
     // You can store discordUserId and grant access here
-    return res.json({ redirect: `${req.headers.origin}/success.html` });
+    return res.json({ redirect: `pages/success.html` });
   }
 
   const session = await stripe.checkout.sessions.create({
@@ -48,8 +48,8 @@ app.post('/create-checkout-session', async (req, res) => {
       },
       quantity: 1
     }],
-    success_url: `${req.headers.origin}/success.html`,
-    cancel_url: `${req.headers.origin}/cancel.html`
+    success_url: `pages/success.html`,
+    cancel_url: `pages/cancel.html`
   });
 
   res.json({ url: session.url });
