@@ -19,7 +19,7 @@ app.post('/create-checkout-session', async (req, res) => {
   const { productId } = req.body;
 
   const products = {
-    starter: { name: "Starter Plan", price: 1000 },
+    starter: { name: "Starter Plan", price: 1 },
     premium: { name: "Premium Plan", price: 2500 }
   };
 
