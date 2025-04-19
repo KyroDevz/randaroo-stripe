@@ -19,8 +19,8 @@ app.post('/create-checkout-session', async (req, res) => {
   const { productId, robloxUsername, discordUserId } = req.body;
 
   const products = {
-    starter: { name: "Starter Plan", price: 1000 },
-    premium: { name: "Premium Plan", price: 2500 }
+    starter: { name: "Starter Plan", price: 1 },
+    premium: { name: "Premium Plan", price: 1499 }
   };
 
   const product = products[productId];
