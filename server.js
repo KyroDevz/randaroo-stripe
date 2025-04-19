@@ -10,9 +10,9 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://shop.rankaroo.solutions', // Your frontend
+  origin: 'https://shop.rankaroo.solutions', // ✅ your frontend URL
   methods: ['GET', 'POST'],
-  credentials: true,
+  credentials: true
 }));
 
 const products = {
